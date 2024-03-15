@@ -14,7 +14,7 @@ class User:
   def __init__(self, user_name, password):
     self.create_user_name = user_name.lower()
     self.create_password = password
-
+    
     #TODO: 
     #1. Check if user_name already exist in the file, if so print some error.
     # we can check all the odd numbers of elements for usernames
