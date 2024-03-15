@@ -12,9 +12,10 @@ class Item:
       catogery = row['catogery']
       quantity = row['quantity']
       if catogery in catogeryquantity:
-        catogeryquantity[getcatogery] = quantity
+        catogeryquantity[getcatogery] = quantit
       else:
-        catogeryquantity[getcatogery] = quantity
+        catogeryquantity[getcatogery] = quantity  
+        return catogeryquantity
 
     
 
