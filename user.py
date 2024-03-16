@@ -1,36 +1,32 @@
 #Hao Cui has claimed this spot. Do not touch this file
 import csv
+import sys
 
-#the 3 lines below are for asking user to input usernamd and password
-#in the main menu.
-
-#create_username = input("Create Username: ")
-#create_password = input("Create Password: ")
-#person1 = User(create_username, create_password) 
-
-class User:
+class Create_User:
 
   #user createion
-  def __init__(self, user_name, password):
+  def __init__(self, user_name, user_password):
     self.create_user_name = user_name.lower()
-    self.create_password = password
-    
-    #TODO: 
-    #1. Check if user_name already exist in the file, if so print some error.
-    # we can check all the odd numbers of elements for usernames
-    #2. (BONUS): limit characters of username and password.
-    # Force minimum special characters and non repeating characters
-    try:
-      with open("user.csv", mode = "a") as file:
-        writer = csv.writer(file)
-        writer.writerow([self.create_user_name , self.create_password])
-    except ValueError:
-      print("test")
+    self.create_password = user_password
+    with open("user.csv") as file:
+      if self.create_user_name in file.read(): #check if username is in the file
+        print(f"The username {self.create_user_name} already exists!")
+      else:
+        with open("user.csv", mode = "a") as file:
+          writer = csv.writer(file)
+          writer.writerow([self.create_user_name , self.create_password])
+          print("Your Account has been created successfully!")
+          print(f"Your Username is: {self.create_user_name} \nYour Password is: {self.create_password}")
 
-  #user authentication
-
-  #def auth(user_name, password):
-    #TODO: 
-  #1. Check whether user_name exist in the user.csv file, if so then say user_name DNE
-  #2. If user_name exists in user.csv file, then check the very next element to match
-  #. the password.
+class User:
+  def __init__(self, user_name, user_password):
+    with open("user.csv") as file:
+      account = [user_name, user_password]
+      reader = csv.reader(file)
+      for i in reader:
+        if user_name in i and account == i:
+          print("Login successful!")
+          break
+        else:
+          print("Login Failed!")
+          sys.exit(1)
