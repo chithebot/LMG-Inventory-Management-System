@@ -1,6 +1,5 @@
-import csv
-from user import User
-from user import Create_User
+from user import Create_User, User
+
 
 class Main():
     
@@ -17,22 +16,9 @@ class Main():
             print("--Create Search Interface--")
 
     
-    def create_user(self):
-        print("Enter your login credential:\n")
-        create_username = input("Create Username: ")
-        create_password = input("Create Password: ")
-        user1 = Create_User(create_username, create_password)
-
-    
-    def login(self):
-        login_username = input("Login Username: ")
-        login_password = input("Login Password: ")
-        logged_user = User(login_username, login_password)    
-        print("message after login sucessful, this line should not print if login has failed")
-
-    
     def main_menu(self):
-        user_input=-1
+        user_input=-10
+        self.remote(user_input)
         while exit !=0:
             print("------ Main Menu ------")
             print("1. Create New User ")
@@ -47,7 +33,20 @@ class Main():
                 print("Successfully Logged Out Of System ")
                 break
             self.remote(user_input)
-    
+
+
+  def create_user(self):
+      print("Enter your login credential:\n")
+      create_username = input("Create Username: ")
+      create_password = input("Create Password: ")
+      user1 = Create_User(create_username, create_password)
+
+
+  def login(self):
+      login_username = input("Login Username: ")
+      login_password = input("Login Password: ")
+      logged_user = User(login_username, login_password)    
+      print("message after login sucessful, this line should not print if login has failed")
   # def access_item_category_data():
   #     with open('data.csv', mode ='r') as file:
   #     csvFile = csv.reader(file)
