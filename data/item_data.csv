@@ -1,5 +1,10 @@
 name,sku,category,quantity
-cookies,635000,food,"10,000"
-toilet paper,635001,essential,"10,000"
-air forces,635002,shoes,"2,000"
-paper towels,635003,essential,"5,000"
+Google Pixel 8,120000,electronics,200
+PlayStation 5,120001,electronics,200
+Xbox Series X,120002,electronics,200
+toilet paper,313000,essentials,10000
+napkins,313001,essentials,10000
+paper towels,313002,essentials,5000
+cereal bar,635000,food,2000
+ASICS Gel-Nimbus,710000,apparrel,150
+Nike Cortez,710001,apparrel,200
