@@ -4,7 +4,21 @@ import list_database as ldb
 
 
 class CategoryDatabase(ldb.ListDatabase):
-        
+    """ This class is a database for categories.
+    """
+    __doc__ += ('\n' + ldb.ListDatabase.__doc__)
+
+    """
+    This function reads the category data from the file that is stored
+    in the current CategoryDatabase object. The data is read into the 
+    database container of this object.
+
+    Args:
+        self (CategoryDatabase) : the current CategoryDatabase object
+
+    Raises:
+        IOError: Raised if file could not be opened
+    """
     def readData(self):
         
         try:
@@ -25,6 +39,17 @@ class CategoryDatabase(ldb.ListDatabase):
             print("File could not be opened: ", e)
 
 
+    """
+    This function saves the category data from the database container, of
+    the current CategoryDatabase object, into the file located at the filename
+    stored in this object.
+
+    Args:
+        self (CategoryDatabase) : the current CategoryDatabase object
+
+    Raises:
+        IOError: Raised if file could not be opened
+    """
     def saveData(self):
 
         try:

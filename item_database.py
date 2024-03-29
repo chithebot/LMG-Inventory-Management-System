@@ -5,7 +5,22 @@ import list_database as ldb
 
 
 class ItemDatabase(ldb.ListDatabase):
-        
+    """ This class is a database for items.
+    """
+    __doc__ += ('\n' + ldb.ListDatabase.__doc__)
+    
+
+    """
+    This function reads the item data from the file that is stored
+    in the current ItemDatabase object. The data is read into the 
+    database container of this object.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+
+    Raises:
+        IOError: Raised if file could not be opened
+    """
     def readData(self):
         
         try:
@@ -29,6 +44,17 @@ class ItemDatabase(ldb.ListDatabase):
             print("File could not be opened: ", e)
 
 
+    """
+    This function saves the item data from the database container, of
+    the current ItemDatabase object, into the file located at the filename
+    stored in this object.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+
+    Raises:
+        IOError: Raised if file could not be opened
+    """
     def saveData(self):
 
         try:
