@@ -21,7 +21,7 @@ class Item(entity.Entity):
         category (string)	: the category the Item object belongs to
         quantity (int)	    : the quantity of the Item object
     """ 
-    def __init__(self, name="", sku=0, category="", quantity=0):
+    def __init__(self, name="", sku=0, category="none", quantity=0):
         super().__init__(name)
         self._sku = sku
         self._category = category
@@ -33,7 +33,6 @@ class Item(entity.Entity):
 
     Args:
         self (Item) : the current Item object
-        sku (int)   : the ID of the Item object
 
     Returns:
         Returns the Item object's SKU.
@@ -48,7 +47,6 @@ class Item(entity.Entity):
 
     Args:
         self (Item)		    : the current Item object
-        category (string)	: the category the Item object belongs to
 
     Returns:
         Returns the Item object's category.
@@ -63,7 +61,6 @@ class Item(entity.Entity):
 
     Args:
         self (Item)     : the current Item object
-        quantity (int)  : the quantity of the Item object
 
     Returns:
         Returns the Item object's quantity.

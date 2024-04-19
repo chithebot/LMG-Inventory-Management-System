@@ -68,3 +68,16 @@ class CategoryDatabase(ldb.ListDatabase):
         # Handles case of failure to open file
         except IOError as e:
             print("File could not be opened: ", e)
+
+
+    """
+    This function sorts the categories. If reverse is set then the
+    categories will be sorted in the reverse order. Reverse is set
+    to False as its default configuration.
+
+    Args:
+        self (CategoryDatabase) : the current CategoryDatabase object
+        reverse (bool)          : an indicator to sort in reverse order
+    """
+    def sort(self, reverse=False):
+        self.db.sort(reverse=reverse)

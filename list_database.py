@@ -49,7 +49,122 @@ class ListDatabase(database.Database, abc.ABC):
         Returns an iterator to the ListDatabase's list. 
     """
     def __iter__(self):
-        return self.db.__iter__()
+        return iter(self.db)
+
+
+    """
+    This function returns the length of the list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+
+    Returns:
+        Returns the length of the ListDatabase's list. 
+    """
+    def __len__(self):
+        return len(self.db)
+    
+
+    """
+    This function returns the value associated with the given
+    key, or index, in the list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+
+    Returns:
+        Returns the value, associated with the given key, or
+        index, in the ListDatabase's list. 
+    """
+    def __getitem__(self, key):
+        return self.db[key]
+    
+
+    """
+    This function returns the index, associated with the given
+    element, in the list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+
+    Raises:
+        ValueError : Raised if the element does not exist in list.
+
+    Returns:
+        Returns the index, associated with the given element, or
+        value, in the ListDatabase's list. 
+    """
+    def index(self, element):
+        return self.db.index(element)
+
+
+    """
+    This function returns a boolean value indicating if the
+    database is empty. Returns True if empty; otherwise, False
+    is returned.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+
+    Returns:
+        Returns True if the database is empty; False, otherwise.
+    """
+    def empty(self):
+        return not self.db
+    
+
+    """
+    This function sets the given value to the key location
+    in the list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+    """
+    def __setitem__(self, key, value):
+        self.db[key] = value
+
+
+    """
+    This function removes a given element from the list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+        element (T)         : the element to remove
+
+    Raises:
+        ValueError : Raised if element does not exist in list
+    """
+    def remove(self, element):
+        self.db.remove(element)
+
+
+    """
+    This is removes an element, at the given index, from the list
+    and returns the removed element.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+        element (T)         : the element to remove
+
+    Raises:
+        IndexError : Raised if index is out of bounds
+    
+    Returns:
+        Returns the element that was removed.
+    """
+    def pop(self, index):
+        return self.db.pop(index)
+
+
+    """
+    This is an function which clears the data from the current ListDatabase
+    object's list.
+
+    Args:
+        self (ListDatabase) : the current ListDatabase object
+    """
+    def clearData(self):
+        self.db.clear()
 
 
     """

@@ -32,9 +32,10 @@ class UserDatabase(ddb.DictDatabase):
                 # Reading data from csv file
                 next(reader)        # skips header
                 for row in reader:
-                    username = row[0]
-                    password = row[1]
-                    self.db[username] = password
+                    name = row[0]
+                    username = row[1]
+                    password = row[2]
+                    self.db[username] = [name, password]
 
         # Handles case of failure to open file
         except IOError as e:
@@ -62,10 +63,10 @@ class UserDatabase(ddb.DictDatabase):
                 writer = csv.writer(csvfile, delimiter=',')
 
                 # Writing data from database into csv file
-                header = ["username", "password"]
+                header = ["name", "username", "password"]
                 writer.writerow(header)
                 for row in self.db:
-                    writer.writerow([row, self.db[row]])
+                    writer.writerow([self.db[row][0], row, self.db[row][1]])
 
         # Handles case of failure to open file
         except IOError as e:

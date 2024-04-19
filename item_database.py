@@ -73,4 +73,55 @@ class ItemDatabase(ldb.ListDatabase):
         # Handles case of failure to open file
         except IOError as e:
             print("File could not be opened: ", e)
+
+
+    """
+    This function sorts the items by their name. If reverse is set then the
+    items will be sorted in the reverse order by their name. Reverse is set
+    to False as its default configuration.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+        reverse (bool)      : an indicator to sort in reverse order
+    """
+    def sortByName(self, reverse=False):
+        self.db.sort(key=lambda item : item.name, reverse=reverse)
     
+    
+    """
+    This function sorts the items by their SKU. If reverse is set then the
+    items will be sorted in the reverse order by their SKU. Reverse is set
+    to False as its default configuration.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+        reverse (bool)      : an indicator to sort in reverse order
+    """
+    def sortBySKU(self, reverse=False):
+        self.db.sort(key=lambda item : item.sku, reverse=reverse)
+
+
+    """
+    This function sorts the items by their category. If reverse is set then the
+    items will be sorted in the reverse order by their category. Reverse is set
+    to False as its default configuration.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+        reverse (bool)      : an indicator to sort in reverse order
+    """
+    def sortByCategory(self, reverse=False):
+        self.db.sort(key=lambda item : (item.category, item.sku), reverse=reverse)
+
+
+    """
+    This function sorts the items by their quantity. If reverse is set then the
+    items will be sorted in the reverse order by their quantity. Reverse is set
+    to False as its default configuration.
+
+    Args:
+        self (ItemDatabase) : the current ItemDatabase object
+        reverse (bool)      : an indicator to sort in reverse order
+    """
+    def sortByQuantity(self, reverse=False):
+        self.db.sort(key=lambda item : (item.quantity, item.sku), reverse=reverse)
