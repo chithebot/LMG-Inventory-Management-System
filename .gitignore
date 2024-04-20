@@ -1,8 +1,11 @@
+# Project files
+test*.py
+
 # Replit Files
 .replit
-poetry.lock
-pyproject.toml
-.breakpoints
+poetry.lock*
+pyproject.toml*
+.breakpoints*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
