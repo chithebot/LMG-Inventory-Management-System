@@ -1,13 +1,10 @@
-import time
+import datetime
 
-import create_user
-import exit
 from ims_constants import *
 import ims_tools
 import main_menu
 import start_menu
 import state
-import tools
 import user_input
 
 
@@ -15,6 +12,77 @@ class Login(state.State):
     """ This class is the system object's login state which the user
     interacts with to get access to other system features.
     """
+
+
+    """
+    This function handles validating the passed in username with the system
+    user database. If the username is validated, True is returned; False,
+    otherwise. On the failure to validate the username, messsages are printed
+    onto the console to indicate what was the cause of failure.
+
+    Args:
+        self (Login)      : the current Login object
+        system (System)   : the System object of interest
+        username (string) : the username of the object
+
+    Returns:
+        Returns True if the username is validated; False, otherwise.
+    """
+    def validateUsername(self, system, username):
+        
+        # Validating that username exists in system user database
+        usr = system.userdb.get(username)
+        failureMsg = ""
+        if usr is not None:
+
+            # Unlocking account if it is possible
+            if usr.isUnlockable():
+                usr.unlock()
+
+            # Handles cases if the account is not locked
+            if not usr.isLocked():
+                return True, failureMsg
+            
+            # Handles case for account being locked
+            failureMsg = "The account you are trying to access is locked.\n"
+            failureMsg += f"You are locked out for {usr.getRemainingLockDuration():.1f} more minutes.\n"
+            failureMsg += "Please reset the password in the start menu to unlock it.\n"
+
+        else:
+            failureMsg = "The account you are trying to access does not exist.\n"
+        return False, failureMsg
+
+
+    """
+    This function handles validating the passed in password with the passed
+    in username in the system user database. If the username is validated, 
+    True is returned; False, otherwise. On the failure to validate the
+    username, messsages are printed onto the console to indicate what was
+    the cause of failure.
+
+    Args:
+        self (Login)      : the current Login object
+        system (System)   : the System object of interest
+        username (string) : the username of the user
+        password (string) : the password of the user
+
+    Returns:
+        Returns True if the password is validated; False, otherwise.
+    """
+    def validatePassword(self, system, username, password):
+        
+        # Validating that password
+        failureMsg = ""
+        usr = system.userdb.get(username)
+        if usr is not None and usr.password == password:
+            return True, failureMsg
+        
+        # Handles validation failure
+        usr.last_login_attempt = datetime.datetime.now()
+        usr.login_attempts += 1
+        failureMsg = f"You have {MAX_LOGIN_ATTEMPTS - usr.login_attempts} login attempts left before this account is locked.\n"
+        return False, failureMsg
+
 
     """
     This function handles logging the user into the given system. 
@@ -26,70 +94,50 @@ class Login(state.State):
     def update(self, system):
         
         # Defining possible states
-        states = {1: start_menu.StartMenu, 2: create_user.CreateUser, 3: main_menu.MainMenu, 4: exit.Exit}
+        states = {1: start_menu.StartMenu, 2: main_menu.MainMenu}
 
-        # Read user data into the system user database
-        system.userdb.readData()
+        # Loads user data into the system if not already loaded
+        if not system.userLoaded:
+            system.userdb.readData()
+            system.userLoaded = True
 
         # Allows for user to enter username and password a certain number of tries until program terminates
-        maxAttempts = 3     # max number of tries to enter username and password
-        attempts = 0        # current number of tries
         done = False        # whether or not to continue attempting to log in
         validated = False   # indicates whether or not user has been validated
-        headerMsg = None    # header message to be displayed
 
-        while not done and not validated and attempts < maxAttempts:
+        while not done and not validated:
 
             # Preparing screen for logging attempt 
             ims_tools.newScreen()
-            if headerMsg is not None:
-                print(headerMsg, end = "\n")
-                headerMsg = None
 
-            # Asking user for username
+            # Asking user for username and password
             print("Enter your username and password.\n")
             usernameInput = user_input.getString("Username: ", 1, USERNAME_MAX)
-            
-            # Checking that username is valid
-            searchResult = system.userdb.get(usernameInput)
-            if searchResult is None:
-                headerMsg = "Please enter a valid username.\n"
-                continue
-            
-            # Asking user for password associated with user account
             passwordInput = user_input.getString("Password: ", 1, PASSWORD_MAX)
-            attempts += 1
             print()
 
-            # Checking if password matches in system database
-            validated = (searchResult != None and searchResult[1] == passwordInput)
+            # Validation phase
+            usernameValidated, failureMsg = self.validateUsername(system, usernameInput)
+            passwordValidated = False
+
+            # Validating password
+            if usernameValidated:
+                passwordValidated, failureMsg = self.validatePassword(system, usernameInput, passwordInput)
 
             # Prompting user if they would like to continue trying to login
+            validated = usernameValidated and passwordValidated
             if not validated:
-                print(f"Remaining login attempts until lock out: {maxAttempts - attempts}")
+                print(failureMsg)
                 done = (user_input.getYesOrNo("Would you like to continue logging in?") == 'n')
                 print()
 
-        # Clearing user data from system memory
-        system.userdb.clearData()
-
-        # Handling system state change if not authorized and used all tries
-        if not validated and attempts == maxAttempts:
-            print("Too many failed login attempts. Exiting system...\n")
-            time.sleep(2)
-            tools.clearScreen()
-            system.changeState(states[4]())
-
-        # Handling system state change if user is authorized
-        elif validated:
-            system.user.name = searchResult[0]
-            system.user.username = usernameInput
-            system.changeState(states[3]())
-
-        # Handling system state change if user is not authorized
+        # Handles case where user is validated and can log in
+        if validated:
+            usr = system.userdb[usernameInput]
+            usr.unlock()                            # resets login attempts
+            system.user.name = usr.name
+            system.user.username = usr.username
+            system.changeState(states[2]())
         else:
-            userInput = user_input.getYesOrNo("Would you like to create a new account?")
-            if userInput == 'y':
-                system.changeState(states[2]())
-            else:
-                system.changeState(states[1]())
+            system.changeState(states[1]())
+        system.userdb.saveData()
