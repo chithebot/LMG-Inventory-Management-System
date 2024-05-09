@@ -39,7 +39,8 @@ class System:
         self._userdb = udb.UserDatabase(filename_udb)       # contains the user database
         self._user = user.User()                            # current user of the system
         self._state = introduction.Introduction()           # state of the current system
-        self._loaded = False                                # indicates if the system has already loaded item and category data
+        self._dataLoaded = False                            # indicates if the system has already loaded item and category data
+        self._userLoaded = False                            # indicates if the system has already loaded user data
         self._categoryChange = False                        # indicates if a changes have been made to the catdb
         self._itemChange = False                            # indicates if a changes have been made to the itemdb
         self._exit = False                                  # indicates exit status of system
@@ -102,19 +103,36 @@ class System:
 
 
     """
-    This function gets the current System object's loaded status. This
-    status indicates if the System object's item or category database
-    were loaded.
+    This function gets the current System object's item and category data
+    loaded status. This status indicates if the System object's item or
+    category database were loaded.
 
     Args:
         self (System) : the current System object
 
     Returns:
-        Returns the System object's loaded status.
+        Returns the System object's item and category loaded status.
     """
     @property
-    def loaded(self):
-        return self._loaded  
+    def dataLoaded(self):
+        return self._dataLoaded  
+
+
+    """
+    This function gets the current System object's user data loaded
+    status. This status indicates if the System object's user data were
+    loaded.
+
+    Args:
+        self (System) : the current System object
+
+    Returns:
+        Returns the System object's user data loaded status.
+    """
+    @property
+    def userLoaded(self):
+        return self._userLoaded  
+
 
     """
     This function gets the current System object's change status. This
@@ -180,7 +198,11 @@ class System:
             welcomeString += "Good Afternoon"
         else:
             welcomeString += "Good Evening"
-        welcomeString += f", {self.user.name}!"
+
+        # Adding user's name to welcome message if user has name
+        if len(self.user.name) > 0:
+            welcomeString += f", {self.user.name}"
+        welcomeString += "!"
         print(welcomeString)
 
 
@@ -227,16 +249,30 @@ class System:
         
 
     """
-    This function sets the current System object's loaded status
-    to the passed in loaded status.
+    This function sets the current System object's item and
+    category data loaded status to the passed in status.
 
     Args:
-        self (System) : the current System object
-        loaded (bool) : the loaded status to set
+        self (System)     : the current System object
+        dataLoaded (bool) : the loaded status to set
     """
-    @loaded.setter
-    def loaded(self, loaded):
-        self._loaded = loaded
+    @dataLoaded.setter
+    def dataLoaded(self, dataLoaded):
+        self._dataLoaded = dataLoaded
+
+
+
+    """
+    This function sets the current System object's user data
+    loaded status to the passed in status.
+
+    Args:
+        self (System)     : the current System object
+        userLoaded (bool) : the loaded status to set
+    """
+    @userLoaded.setter
+    def userLoaded(self, userLoaded):
+        self._userLoaded = userLoaded
 
 
     """
