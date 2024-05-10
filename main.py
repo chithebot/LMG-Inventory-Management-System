@@ -2,7 +2,7 @@ import inventory_management_system as ims
 import unittest
 from unit_testall import *
 
-# Uncomment to run program
+# Program runs here
 app = ims.InventoryManagementSystem()
 app.run()
 
