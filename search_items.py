@@ -157,7 +157,7 @@ class SearchItems(state.State):
             for pair in parameters:
 
                 paramName = pair[0]
-                param = pair[1].lower()
+                param = pair[1].replace(' ', '').lower()
                 itemAttr = str(getattr(item, paramName)).replace(' ','').lower()
                 
                 # Checks if parameter is in current item
