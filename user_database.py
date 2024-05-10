@@ -1,6 +1,8 @@
 import csv
 
 import dict_database as ddb
+import tools
+import user
 
 
 class UserDatabase(ddb.DictDatabase):
@@ -18,7 +20,8 @@ class UserDatabase(ddb.DictDatabase):
         self (UserDatabase) : the current UserDatabase object
 
     Raises:
-        IOError: Raised if file could not be opened
+        IOError    : Raised if file could not be opened
+        ValueError : Raised if strings cannot be converted to integers.
     """
     def readData(self):
         
@@ -35,11 +38,30 @@ class UserDatabase(ddb.DictDatabase):
                     name = row[0]
                     username = row[1]
                     password = row[2]
-                    self.db[username] = [name, password]
+
+                    security_question = None
+                    if row[3] != "None":
+                        security_question = int(row[3])
+
+                    security_question_ans = None
+                    if row[4] != "None":
+                        security_question_ans = row[4]
+                    
+                    last_login_attempt = None
+                    if row[5] != "None":
+                        last_login_attempt = tools.stringToDatetime(row[5])
+                    
+                    login_attempts = int(row[6].strip())
+                    self.db[username] = user.User(name, username, password, security_question,
+                                                  security_question_ans, last_login_attempt, login_attempts)
 
         # Handles case of failure to open file
         except IOError as e:
             print("File could not be opened: ", e)
+        
+        # Handles case of login attempts not being able to be converted to int
+        except ValueError as e:
+            print("login_attempts field could not be converted to int: ", e)
 
 
     """
@@ -63,10 +85,13 @@ class UserDatabase(ddb.DictDatabase):
                 writer = csv.writer(csvfile, delimiter=',')
 
                 # Writing data from database into csv file
-                header = ["name", "username", "password"]
+                header = ["name", "username", "password", "security_question",
+                          "security_question_ans", "last_login_attempt", "login_attempts"]
                 writer.writerow(header)
                 for row in self.db:
-                    writer.writerow([self.db[row][0], row, self.db[row][1]])
+                    usr = self.db[row]
+                    writer.writerow([usr.name, usr.username, usr.password, usr.security_question,
+                                    usr.security_question_ans, str(usr.last_login_attempt), usr.login_attempts])
 
         # Handles case of failure to open file
         except IOError as e:

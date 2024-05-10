@@ -24,7 +24,7 @@ class ListDatabase(database.Database, abc.ABC):
         self._db = []
 
 
-    """
+    """6
     This function gets the database stored in the ListDatabase object.
 
     Args:
