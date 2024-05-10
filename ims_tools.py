@@ -226,7 +226,7 @@ def nameExistIn(itemName, itemList):
 
     # Checking if name already exists in the item list
     for item in itemList:
-        if item.name == itemName:
+        if item.name.replace(' ', '').lower() == itemName.replace(' ', '').lower():
             return True
     return False
 
