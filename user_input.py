@@ -1,4 +1,5 @@
 import sys
+import tools
 
 
 """
@@ -26,7 +27,7 @@ def getInt(prompt):
         
         # Handles case where user input is not an integer
         except ValueError:
-            print(f"Please enter an integer.\n")
+            print("Please enter an integer.\n")
 
     return userInput
 
@@ -34,14 +35,18 @@ def getInt(prompt):
 """
 This function gets the user's integer input, within a certain range,
 and returns it. It handles input checking in the case that non-integer
-characters or integers, not within the specified range, are entered.
+characters or integers, not within the specified range, are entered. A
+list of outlier values, which are outside of the range of user inputs,
+can also be passed in. If the user's input exists in the outliers, it
+will be returned.
 
-    Range: [start, end)
+    Range: [start, end); [outlier_1, outlier_2, ..., outlier_n]
 
 Args:
-    prompt (string) : the prompt to display to ask user for input
-    start (int)     : the lower bound of the range
-    end (int)       : the upper bound of the range which is not included
+    prompt (string)      : the prompt to display to ask user for input
+    start (int)          : the lower bound of the range
+    end (int)            : the upper bound of the range which is not included
+    outliers (list<int>) : a list of outlier values
 
 Raises:
     ValueError : Raised if lower bound is greater than upper bound
@@ -49,16 +54,16 @@ Raises:
 Returns:
     Returns the user's integer input.
 """
-def getIntRange(prompt, start, end):
-    
+def getIntRange(prompt, start, end, outliers=[]):
+ 
     # Variable declarations
     valid = False       # tracks validity of the user input
     userInput = 0       # the user's input
-    
+
     # Handles checking that lower bound is not greater than or equal to the upper bound
     if (start >= end):
         raise ValueError("'start' argument cannot be greater than or equal to 'end' argument.")
-    
+
     # Gets an integer from the user
     while not valid:
 
@@ -66,11 +71,11 @@ def getIntRange(prompt, start, end):
             userInput = getInt(prompt)
 
             # Checking if user input is within the given ranges 
-            if (userInput < start) or (userInput >= end):
+            if (userInput not in outliers) and (userInput < start or userInput >= end):
 
                 # Handles raising exceptions when start and end are not equal and equal
-                raise ValueError("Integer must be between " + str(start) + " and " + str(end) +
-                                 "; Range = [" + str(start) + ", " + str(end) + ").")
+                raise ValueError("Integer must be between " + str(start) + " and " + str(end - 1) +
+                                 "; Range = [" + str(start) + ", " + str(end - 1) + "].")
             valid = True            
 
         except ValueError as e:
@@ -81,22 +86,27 @@ def getIntRange(prompt, start, end):
 
 """
 This function gets the user's string input and checks that it is
-the appropriate specified length.  
+the appropriate specified length. A string can be passed in which
+contains characters which the user input should not contain.
 
 Args:
-    prompt (string) : the prompt to display to ask user for input
-    min (int)       : the minimum length of the user's input
-    max (int)       : the maximum length of the user's input
+    prompt (string)  : the prompt to display to ask user for input
+    min (int)        : the minimum length of the user's input
+    max (int)        : the maximum length of the user's input
+    outliers(string) : a string containing characters not allowed in input
 
 Raises:
     ValueError : Raised if minimum number of characters is greater than
-                 the maximum number of characters 
+                 the maximum number of charactersaaa
+    ValueError : Raised if user input contains any outlier characters
+    ValueError : Raised if number of characters exceeds maximum characters
+    ValueError : Raised if number of characters is below minimum characters
 
 Returns:
     Returns the user's input.
 """
-def getString(prompt, min=0, max=sys.maxsize):
-    
+def getString(prompt, min=0, max=sys.maxsize, outliers=""):
+
     # Variable declarations
     valid = False       # tracks validity of the user input
     userInput = ""      # the user's input
@@ -116,7 +126,11 @@ def getString(prompt, min=0, max=sys.maxsize):
                 raise ValueError("Input must contain at least " + str(min) + " characters.")
             if len(userInput) > max:
                 raise ValueError("Input must contain at most " + str(max) + " characters.")
-            valid = True            
+
+            # Checking if user input contains invalid characters
+            if tools.stringContains(userInput, outliers):
+                raise ValueError("Input contains excluded characters: [" + outliers + "]")
+            valid = True        
 
         except ValueError as e:
             print(e, end="\n\n")
@@ -130,15 +144,19 @@ Args:
     prompt (string) : the prompt to display to ask user for input
     min (int)       : the minimum length of the user's input
     max (int)       : the maximum length of the user's input
+    outliers(string) : a string containing characters not allowed in input
 
 Raises:
     ValueError : Raised if minimum number of characters is greater than
-                 the maximum number of characters 
+                 the maximum number of charactersaaa
+    ValueError : Raised if user input contains any outlier characters
+    ValueError : Raised if number of characters exceeds maximum characters
+    ValueError : Raised if number of characters is below minimum characters
 
 Returns:
     Returns the user's input.
 """
-def getStrongPassword(prompt, min=12, max=sys.maxsize):
+def getStrongPassword(prompt, min=12, max=sys.maxsize, outliers=""):
     
     # Variable declarations
     valid = False       # tracks validity of the user input
@@ -148,7 +166,7 @@ def getStrongPassword(prompt, min=12, max=sys.maxsize):
     while not valid:
 
         try:
-            userInput = getString(prompt, min, max)
+            userInput = getString(prompt, min, max, outliers)
 
             # Strong password checklist
             uppercase = False       # Tracks if user input has an uppercase
@@ -166,7 +184,7 @@ def getStrongPassword(prompt, min=12, max=sys.maxsize):
                     lowercase = True
                 elif char.isnumeric():
                     number = True
-                elif char in "~`! @#$%^&*()_-+={[}]|\:;\"'<,>.?/!@":
+                elif char in "~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/!@":
                     symbol = True
 
             # Throwing exceptions if password does not meet criteria
@@ -202,7 +220,6 @@ Args:
     prompt (string) : the prompt to display to ask user for input
 """
 def getContinue(prompt="Press any key to continue.\n"):
-
     input(prompt)
 
 
@@ -234,7 +251,7 @@ def getYesOrNo(prompt):
                 raise ValueError("Invalid input! Input size must be 1 character.") 
             elif userInput.lower() not in "yn":
                 raise ValueError("Invalid input! Valid inputs are: [Y, N, y, n]")
-            valid = True            
+            valid = True
 
         except ValueError as e:
             print(e, end="\n\n")
