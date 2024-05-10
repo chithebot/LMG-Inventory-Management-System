@@ -110,6 +110,7 @@ class CreateUser(state.State):
         self (CreateUser) : the current CreateUser object
         system (System)   : the System object of interest
     """
+  
     def update(self, system):
 
         # Possible states for the system to update to
@@ -126,22 +127,31 @@ class CreateUser(state.State):
         while not done and not created:
 
             # Defining function and attribute dictionary
-            funcList = [self.getUsername, self.getPassword, self.getName, self.getSecurityQuestion, self.getSecurityQuestionAnswer]
-            attrList = ["username", "password", "name", "security_question", "security_question_ans"]
+            funcList = [self.getName,self.getUsername, self.getPassword, self.getSecurityQuestion, self.getSecurityQuestionAnswer]
+            attrList = ["name","username", "password", "security_question", "security_question_ans"]
 
             # Getting User information
             newUser = user.User()
+            #displayUserInfo = info.info
             for i in range(len(funcList)):
                 ims_tools.newScreen()
                 ims_tools.displayUserInfo("New User Information", newUser)
                 setattr(newUser, attrList[i], funcList[i](system))
-
+            # Confirming user information
+            ims_tools.newScreen()
+            ims_tools.displayUserInfo("New User Information", newUser)
+            done = (user_input.getString("Is this information correct? (y/n): ") ==['y', 'n'])
+            if done:
+                created = system.userdb.createUser(newUser)
+                if created:
+                    print("Account created! Please log in to continue.")
+                  
             # Saving new user data to database and changing system state
             confirm = (user_input.getYesOrNo("Please confirm the creation of this account.") == 'y')
             if confirm:
+                system.user.name = newUser.name             # setting current System user to the new User
                 system.userdb[newUser.username] = newUser   # adding new User to database
                 system.userdb.saveData()                    # saving new User to database
-                system.user.name = newUser.name             # setting current System user to the new User
                 system.user.username = newUser.username
                 created = True
             
