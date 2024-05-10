@@ -1,5 +1,5 @@
-from ims_constants import *
 import display_items_menu as dim
+from ims_constants import *
 import ims_tools
 import state
 import user_input

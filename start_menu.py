@@ -1,3 +1,4 @@
+import change_password
 import create_user
 import exit
 import ims_tools
@@ -24,7 +25,8 @@ class StartMenu(menu.Menu, state.State):
         print("Welcome to the Inventory Management System.\n")
         print("1. Login\n"
               "2. Create an Account\n"
-              "3. Exit\n")
+              "3. Forgot Password?\n"
+              "4. Exit\n")
 
 
     """
@@ -38,7 +40,7 @@ class StartMenu(menu.Menu, state.State):
     def update(self, system):
         
         # Defining possible states
-        states = {1: login.Login, 2: create_user.CreateUser, 3: exit.Exit}
+        states = {1: login.Login, 2: create_user.CreateUser, 3: change_password.ChangePassword, 4: exit.Exit}
 
         # Displaying start menu
         ims_tools.newScreen()

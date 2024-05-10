@@ -68,19 +68,19 @@ class RemoveItem(state.State):
             # Only attempting to remove the item if user confirmed it
             if confirm:
 
-                    # Removing item(s) from database
-                    removeList = list(removeDict.keys())
-                    removeList.sort(reverse=True)
-                    for entry in removeList:
-                        system.itemdb.pop(entry - 1)
+                # Removing item(s) from database
+                removeList = list(removeDict.keys())
+                removeList.sort(reverse=True)
+                for entry in removeList:
+                    system.itemdb.pop(entry - 1)
 
-                    # Set system's item change flag to on
-                    if not system.itemChange and len(removeList) > 0:
-                        system.itemChange = True
+                # Set system's item change flag to on
+                if not system.itemChange and len(removeList) > 0:
+                    system.itemChange = True
 
-                    # Preparing new screen and displaying all items
-                    ims_tools.newScreen()
-                    system.displayAllItems()
+                # Preparing new screen and displaying all items
+                ims_tools.newScreen()
+                system.displayAllItems()
 
             # Only asks the user if they wants to remove more items if there are items in database
             if not system.itemdb.empty():

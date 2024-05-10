@@ -14,24 +14,6 @@ class AddItem(state.State):
     """
 
     """
-    This function displays an item's information onto the console/terminal. 
-
-    Args:
-        self (AddItem)  : the current AddItem object
-        header (string) : the header for the item being displayed
-        item (Item)     : the Item object of to be displayed
-    """
-    def displayItemInfo(self, header, item):
-
-        # Displaying new item
-        print(header)
-        print(f"Name: {item.name}\n" +
-              f"SKU: {item.sku}\n" + 
-              f"Category: {item.category}\n" +
-              f"Quantity: {item.quantity}\n")
-
-
-    """
     This function clears the screen, displays all items in the database, and displays
     the new item information to be added.
 
@@ -48,7 +30,7 @@ class AddItem(state.State):
         system.displayAllItems()
 
         # Displaying new item
-        self.displayItemInfo(header, item)
+        ims_tools.displayItemInfo(header, item)
 
     
     """
@@ -67,25 +49,11 @@ class AddItem(state.State):
 
         # Getting item name and checking if it already exists in the item database
         userInput = user_input.getString("Enter the item name: ", 1, NAME_MAX)
-        
-        # Checking if item name exists in the database and getting new item name if it already exists
-        existIn = True 
-        while existIn:
-            
-            # Assumes the name does not exist in before checking
-            existIn = False
 
-            # Checking if item name already exists
-            for i in range(len(system.itemdb)):
-                currentItem = system.itemdb[i]
-                if (currentItem.name.replace(' ','').lower() == userInput.replace(' ','').lower()):
-                    existIn = True
-                    break
-
-            # Getting new item name if previous entry already exists
-            if existIn:
-                print(f"'{userInput}' already exists within the database. Please enter another item name.\n")
-                userInput = user_input.getString("Enter the item name: ", 1, NAME_MAX)
+        # Getting new item name if previous entry already exists
+        while ims_tools.nameExistIn(userInput, system.itemdb.db):
+            print(f"'{userInput}' already exists within the database. Please enter another item name.\n")
+            userInput = user_input.getString("Enter the item name: ", 1, NAME_MAX)
         return userInput
 
 
@@ -106,24 +74,10 @@ class AddItem(state.State):
         # Getting item SKU and checking if it already exists in the item database
         userInput = user_input.getIntRange("Enter the item SKU: ", SKU_MIN_VALUE, SKU_MAX_VALUE + 1)
         
-        # Checking if item SKU exists in the database and getting new item SKU if it already exists
-        existIn = True 
-        while existIn:
-            
-            # Assumes the SKU does not exist in database before checking
-            existIn = False
-
-            # Checking if item SKU already exists
-            for i in range(len(system.itemdb)):
-                currentItem = system.itemdb[i]
-                if (currentItem.sku == userInput):
-                    existIn = True
-                    break
-
-            # Getting new item SKU if previous entry already exists
-            if existIn:
-                print(f"'{userInput}' already exists within the database. Please enter another item SKU.")
-                userInput = user_input.getIntRange("Enter the item SKU: ", SKU_MIN_VALUE, SKU_MAX_VALUE + 1)
+        # Getting new item SKU if previous entry already exists
+        if ims_tools.SKUExistIn(userInput, system.itemdb.db):
+            print(f"'{userInput}' already exists within the database. Please enter another item SKU.")
+            userInput = user_input.getIntRange("Enter the item SKU: ", SKU_MIN_VALUE, SKU_MAX_VALUE + 1)
         return userInput
 
     
@@ -212,19 +166,19 @@ class AddItem(state.State):
             
             # Only attempting to add the item if user confirmed it
             if confirm:
-                    
-                    # Adding new item into database
-                    bisect.insort(system.itemdb.db, newItem)
+                
+                # Adding new item into database
+                bisect.insort(system.itemdb.db, newItem)
 
-                    # Set system's item change flag to on
-                    if not system.itemChange:
-                        system.itemChange = True
+                # Set system's item change flag to on
+                if not system.itemChange:
+                    system.itemChange = True
 
-                    # Preparing new screen and sorting items by SKU
-                    ims_tools.newScreen()
+                # Preparing new screen and sorting items by SKU
+                ims_tools.newScreen()
 
-                    # Displaying items
-                    system.displayAllItems()
+                # Displaying items
+                system.displayAllItems()
 
             quit = (user_input.getYesOrNo("Would you like to add another item?") == 'n')
 

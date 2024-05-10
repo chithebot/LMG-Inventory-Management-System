@@ -1,6 +1,7 @@
 import add_remove_category_menu as arcm
 import add_remove_item_menu as arim
 import display_items_menu as dim
+import edit_item_menu as eim
 import ims_tools
 import logout
 import menu
@@ -18,7 +19,7 @@ class MainMenu(menu.Menu, state.State):
     This function displays the main menu onto the console.
 
     Args:
-        self (MainMenu) : the current MainMenu object
+        self (MainMenu) : the current  azs MainMenu object
     """
     def displayMenu(self):
 
@@ -27,7 +28,8 @@ class MainMenu(menu.Menu, state.State):
               "2. Search Items\n"
               "3. Add or Remove Items\n"
               "4. Add or Remove Categories\n"
-              "5. Logout\n")
+              "5. Edit Item Menu\n"
+              "6. Logout\n")
 
 
     """
@@ -41,13 +43,13 @@ class MainMenu(menu.Menu, state.State):
     def update(self, system):
 
         # Loading all item and category data
-        if not system.loaded:
+        if not system.dataLoaded:
             system.itemdb.readData()
             system.catdb.readData()
-            system.loaded = True
+            system.dataLoaded = True
 
         # Possible states
-        states = {1: dim.DisplayItemsMenu, 2: si.SearchItems, 3: arim.AddRemoveItemMenu, 4: arcm.AddRemoveCategoryMenu, 5: logout.Logout}
+        states = {1: dim.DisplayItemsMenu, 2: si.SearchItems, 3: arim.AddRemoveItemMenu, 4: arcm.AddRemoveCategoryMenu, 5: eim.EditItemMenu, 6: logout.Logout}
 
         # Displaying header and welcome message
         ims_tools.newScreen()
