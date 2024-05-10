@@ -98,8 +98,10 @@ class Item(entity.Entity):
         Returns true if the Item objects are equal; false, otherwise.
     """
     def __eq__(self, other):
-        return self.sku == other.sku and self.name == other.name
-
+        return self.sku == other.sku and self.name == other.name and \
+                self.category == other.category and \
+                self.quantity == other.quantity
+    
 
     """
     This function checks if the current Item object is less than the 
