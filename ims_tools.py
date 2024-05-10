@@ -137,3 +137,117 @@ def displayCategories(categories, entryStart=1):
         print(categoryInfo)
         entry += 1
     print('-' * len(categoryHeader) + '\n')
+
+
+"""
+This function displays an item's information onto the console/terminal. 
+
+Args:
+    header (string) : the header for the item being displayed
+    item (Item)     : the Item object of to be displayed
+"""
+def displayItemInfo(header, item):
+
+    # Displaying new item
+    print(header)
+    print(f"Name: {item.name}\n" +
+          f"SKU: {item.sku}\n" + 
+          f"Category: {item.category}\n" +
+          f"Quantity: {item.quantity}\n")
+
+
+
+"""
+This function displays the security questions onto the console.
+
+Raises:
+    IOError : Raised when file failed to open.
+"""
+def displaySecurityQuestions():
+    
+    # Opening file containing security questions
+    filename = "assets/security_questions.txt"
+    with open(filename) as file:
+
+        # Displaying security questions
+        entry = 1
+        for line in file:
+            print(f"{entry}. " + line, end="")
+            entry += 1
+
+
+
+"""
+This function displays a user's information onto the console/terminal. 
+
+Args:
+    header (string) : the header for the item being displayed
+    user (User)     : the Item object of to be displayed
+"""
+def displayUserInfo(header, user):
+
+    # Getting security question
+    security_question = "None"
+    if user.security_question is not None:
+
+        filename_sq = "assets/security_questions.txt"
+        with open(filename_sq) as file:
+            for i in range(user.security_question):
+                security_question = file.readline()[:-1]
+
+    # Getting security question answer in string form
+    security_question_ans = "None"
+    if user.security_question_ans is not None:
+        security_question_ans = user.security_question_ans
+
+    # Displaying user information
+    print(header)
+    print(f"Name: {user.name}\n" +
+          f"Username: {user.username}\n" +
+          f"Password: {user.password}\n" +
+          f"Security Question: {security_question}\n" +
+          f"Security Question Answer: {security_question_ans}\n")
+
+
+"""
+This function checks if a given item name already exists in
+the passed in list of items. If the item name exists in the
+item list then True is returned; False, otherwise.
+
+Args:
+    itemName (string)     : the item name to search for
+    itemList (list<Item>) : the list containing Item objects
+
+Returns:
+    Returns True if the item name already exists in the item
+    list; False, otherwise.
+"""
+def nameExistIn(itemName, itemList):
+
+    # Checking if name already exists in the item list
+    for item in itemList:
+        if item.name == itemName:
+            return True
+    return False
+
+
+"""
+This function checks if a given item SKU already exists in
+the passed in list of items. If the item SKU exists in the
+item list then True is returned; False, otherwise.
+
+Args:
+    itemSKU (int)         : the item SKU to search for
+    itemList (list<Item>) : the list containing Item objects
+
+Returns:
+    Returns True if the item SKU already exists in the item
+    list; False, otherwise.
+"""
+def SKUExistIn(itemSKU, itemList):
+
+    # Checking if SKU already exists in the item list
+    for item in itemList:
+        if item.sku == itemSKU:
+            return True
+    return False
