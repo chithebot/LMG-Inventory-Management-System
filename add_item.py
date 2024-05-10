@@ -151,8 +151,6 @@ class AddItem(state.State):
             for i in range(len(funcList)):
                 
                 # Preparing new screen, displaying all items, and displaying new item information
-                ims_tools.newScreen()
-                system.displayAllItems()
                 self.displayInfo(system, "New Item Information:", newItem)
 
                 # Getting information on item and assigning that information to the new item
