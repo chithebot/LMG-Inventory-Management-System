@@ -1,0 +1,10 @@
+There are essentially ways to run the program.
+
+Basically all you need to do is to uncomment certain blocks of code in order to run the file.
+
+They will have some soft of headers: Label-1 , Label-2
+
+If you would like to run the Inventory Management Syste, all you need to do is uncomment the code under Label-1, and commment out Label-1 Code.
+
+If you would preform pre-made unit-test, you need uncomment the code that has Label-2, and comment out Label-2 Code.
+
